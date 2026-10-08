@@ -1,0 +1,45 @@
+name: Verify anonymous public image pull
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/verify-public.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  anonymous-pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned verification dependencies
+        run: pip install -r requirements.txt
+      - name: Pull immutable image without registry credentials and replay all tasks
+        run: |
+          set -euo pipefail
+          export DOCKER_CONFIG="$(mktemp -d)"
+          IMAGE='ghcr.io/louistiti/openenv-python-repair@sha256:f20fd244cf0d8d30cae48e45c28cebb927a007c3ee7f9694530e697edac4cf56'
+          test ! -f "$DOCKER_CONFIG/config.json"
+          docker pull --platform linux/amd64 "$IMAGE"
+          docker inspect "$IMAGE" > image-public-inspect.json
+          docker run -d --name repair-public -p 8000:8000 "$IMAGE"
+          trap 'docker rm -f repair-public' EXIT
+          for i in $(seq 1 120); do curl -fsS http://127.0.0.1:8000/health && break || sleep 1; done
+          python replay.py > replay-public.json
+          openenv validate --url http://127.0.0.1:8000 --level runtime --json > validation-public.json
+          printf '%s\n' "$IMAGE" > public-image-digest.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anonymous-pull-verification
+          path: |
+            replay-public.json
+            validation-public.json
+            image-public-inspect.json
+            public-image-digest.txt
+      - name: Publish anonymous verification evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload v1 replay-public.json validation-public.json image-public-inspect.json public-image-digest.txt --clobber
