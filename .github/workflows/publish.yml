@@ -2,6 +2,15 @@ name: Build and verify public image
 on:
   push:
     branches: [main]
+    paths:
+      - 'server.py'
+      - 'tasks.json'
+      - 'requirements.txt'
+      - 'Dockerfile'
+      - 'openenv.yaml'
+      - 'replay.py'
+      - 'test_environment.py'
+      - 'generate_tasks.py'
   workflow_dispatch:
 permissions:
   contents: write
