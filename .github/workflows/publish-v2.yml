@@ -1,0 +1,115 @@
+name: Build and verify expanded v2
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-v2.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  packages: write
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned dependencies
+        run: pip install -r requirements.txt
+      - name: Verify reproducible curriculum and all tests
+        run: |
+          set -euo pipefail
+          python generate_expanded.py
+          python prepare_viewer.py
+          git diff --exit-code -- tasks.json tasks.jsonl solutions.json viewer_train.jsonl curriculum.json
+          python -m pytest -q test_environment.py test_curriculum.py | tee test-image-v2.txt
+      - name: Build linux amd64 image
+        run: docker build --platform linux/amd64 -t ghcr.io/louistiti/openenv-python-repair:v2 .
+      - name: Verify all 1200 container episodes and SDK endpoints
+        run: |
+          set -euo pipefail
+          docker run -d --name repair-v2 -p 8000:8000 ghcr.io/louistiti/openenv-python-repair:v2
+          trap 'docker rm -f repair-v2' EXIT
+          for i in $(seq 1 120); do curl -fsS http://127.0.0.1:8000/health && break || sleep 1; done
+          curl -fsS http://127.0.0.1:8000/health
+          python replay.py > replay-image-v2.json
+          openenv validate --url http://127.0.0.1:8000 --level runtime --json > validation-image-v2.json
+          curl -fsS http://127.0.0.1:8000/schema > schema-image-v2.json
+          python - <<'PY'
+          import json
+          assert json.load(open('schema-image-v2.json')) == json.load(open('submission-v2.json'))['schema']
+          PY
+          docker inspect ghcr.io/louistiti/openenv-python-repair:v2 > image-inspect-v2.json
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish image
+        run: |
+          docker push ghcr.io/louistiti/openenv-python-repair:v2
+          docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/louistiti/openenv-python-repair:v2 > image-digest-v2.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v2-verification-results
+          path: |
+            test-image-v2.txt
+            replay-image-v2.json
+            validation-image-v2.json
+            image-inspect-v2.json
+            image-digest-v2.txt
+            schema-image-v2.json
+      - name: Publish verification release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create v2 --title 'Python Repair Lab v2' --notes '1200 seeded repair episodes: 12 families, 48 distinct bug patterns, 25 case sets per pattern; 151780 checks. 50 representative task IDs selected for Arena. All image replays and official SDK runtime checks passed. No Arena score or submission claimed.' test-image-v2.txt replay-image-v2.json validation-image-v2.json image-inspect-v2.json image-digest-v2.txt schema-image-v2.json
+  anonymous-replay:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: v2-verification-results
+      - name: Anonymous pull of immutable public digest and full replay
+        run: |
+          set -euo pipefail
+          export DOCKER_CONFIG="$(mktemp -d)"
+          image="$(cat image-digest-v2.txt)"
+          docker pull "$image"
+          printf '%s\n' "$image" > public-image-digest-v2.txt
+          docker inspect "$image" > image-public-inspect-v2.json
+          docker run -d --name public-v2 -p 8000:8000 "$image"
+          trap 'docker rm -f public-v2; rm -rf "$DOCKER_CONFIG"' EXIT
+          for i in $(seq 1 120); do curl -fsS http://127.0.0.1:8000/health && break || sleep 1; done
+          curl -fsS http://127.0.0.1:8000/health
+          python replay.py > replay-public-v2.json
+          openenv validate --url http://127.0.0.1:8000 --level runtime --json > validation-public-v2.json
+          curl -fsS http://127.0.0.1:8000/schema > schema-public-v2.json
+          python - <<'PY'
+          import json
+          assert json.load(open('schema-public-v2.json')) == json.load(open('submission-v2.json'))['schema']
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v2-anonymous-verification
+          path: |
+            replay-public-v2.json
+            validation-public-v2.json
+            image-public-inspect-v2.json
+            public-image-digest-v2.txt
+            schema-public-v2.json
+      - name: Publish anonymous verification reports
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload v2 replay-public-v2.json validation-public-v2.json image-public-inspect-v2.json public-image-digest-v2.txt schema-public-v2.json
