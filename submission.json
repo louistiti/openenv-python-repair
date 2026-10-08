@@ -1,7 +1,7 @@
 {
   "submission_id": "python-repair-lab-v1",
   "dataset": "Louistiti/openenv-python-repair",
-  "image": "ghcr.io/louistiti/openenv-python-repair:v1",
+  "image": "ghcr.io/louistiti/openenv-python-repair@sha256:f20fd244cf0d8d30cae48e45c28cebb927a007c3ee7f9694530e697edac4cf56",
   "server_port": 8000,
   "schema": {
     "action": {
