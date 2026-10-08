@@ -1,0 +1,789 @@
+{
+  "submission_id": "python-repair-lab-v2",
+  "dataset": "Louistiti/openenv-python-repair",
+  "image": "ghcr.io/louistiti/openenv-python-repair:v2",
+  "server_port": 8000,
+  "schema": {
+    "action": {
+      "additionalProperties": false,
+      "properties": {
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the action",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "operation": {
+          "description": "write replaces solve source; test gives case feedback; submit ends with a correctness reward.",
+          "enum": [
+            "write",
+            "test",
+            "submit"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "code": {
+          "default": "",
+          "description": "Full Python source defining solve. Used only for write. No imports, I/O, or private attributes; ordinary builtins and container/string methods are available.",
+          "maxLength": 16000,
+          "title": "Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "title": "RepairAction",
+      "type": "object"
+    },
+    "observation": {
+      "additionalProperties": false,
+      "properties": {
+        "done": {
+          "default": false,
+          "description": "Whether the episode has terminated",
+          "title": "Done",
+          "type": "boolean"
+        },
+        "reward": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Reward signal from the last action",
+          "title": "Reward"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the observation",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "task_id": {
+          "default": "",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        },
+        "source": {
+          "default": "",
+          "title": "Source",
+          "type": "string"
+        },
+        "steps_left": {
+          "default": 12,
+          "title": "Steps Left",
+          "type": "integer"
+        }
+      },
+      "title": "RepairObservation",
+      "type": "object"
+    },
+    "state": {
+      "additionalProperties": true,
+      "description": "Base class for environment state.\n\nRepresents internal environment state, separate from observations.",
+      "properties": {
+        "episode_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Unique identifier for the current episode",
+          "title": "Episode Id"
+        },
+        "step_count": {
+          "default": 0,
+          "description": "Number of steps taken in the current episode",
+          "minimum": 0,
+          "title": "Step Count",
+          "type": "integer"
+        }
+      },
+      "title": "State",
+      "type": "object"
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "merge-intervals",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "merge-intervals-b1-s05",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "merge-intervals-b2-s10",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "merge-intervals-b3-s15",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "moving-sums-b0-s02",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "moving-sums-b1-s07",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "moving-sums-b2-s12",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "moving-sums-b3-s17",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "weighted-mean-b0-s04",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "weighted-mean-b1-s09",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "weighted-mean-b2-s14",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "weighted-mean-b3-s19",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "stable-unique-b0-s06",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "stable-unique-b1-s11",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "stable-unique-b2-s16",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "stable-unique-b3-s21",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "run-length-b0-s08",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "run-length-b1-s13",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "run-length-b2-s18",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "run-length-b3-s23",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "luhn-b0-s10",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "luhn-b1-s15",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "luhn-b2-s20",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "luhn-b3-s00",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "edit-distance-b0-s12",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "edit-distance-b1-s17",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "edit-distance-b2-s22",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "edit-distance-b3-s02",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "meeting-rooms-b0-s14",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "meeting-rooms-b1-s19",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "meeting-rooms-b2-s24",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "meeting-rooms-b3-s04",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "nearest-percentile-b0-s16",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "nearest-percentile-b1-s21",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "nearest-percentile-b2-s01",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "nearest-percentile-b3-s06",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "fifo-inventory-b0-s18",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "fifo-inventory-b1-s23",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "fifo-inventory-b2-s03",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "fifo-inventory-b3-s08",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "csv-row-b0-s20",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "csv-row-b1-s00",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "csv-row-b2-s05",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "csv-row-b3-s10",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "shortest-path-b0-s22",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "shortest-path-b1-s02",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "shortest-path-b2-s07",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "shortest-path-b3-s12",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "csv-row-b2-s24",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "shortest-path-b3-s24",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    }
+  ],
+  "example_actions": [
+    {
+      "operation": "submit"
+    }
+  ],
+  "finish_action": {
+    "operation": "submit"
+  },
+  "name": "Python Repair Lab v2",
+  "source": "https://github.com/louistiti/openenv-python-repair"
+}

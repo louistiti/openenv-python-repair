@@ -1,0 +1,135 @@
+{
+  "version": 2,
+  "families": {
+    "merge-intervals": [
+      "baseline",
+      "touching-boundary",
+      "nested-endpoint",
+      "unsorted-input"
+    ],
+    "moving-sums": [
+      "baseline",
+      "zero-window",
+      "window-width",
+      "missing-first-window"
+    ],
+    "weighted-mean": [
+      "baseline",
+      "unweighted-numerator",
+      "wrong-denominator",
+      "zero-weight-result"
+    ],
+    "stable-unique": [
+      "baseline",
+      "reverse-traversal",
+      "reverse-output",
+      "wrong-seen-value"
+    ],
+    "run-length": [
+      "baseline",
+      "inverted-grouping",
+      "double-increment",
+      "zero-initial-count"
+    ],
+    "luhn": [
+      "baseline",
+      "wrong-parity",
+      "wrong-reduction",
+      "wrong-modulus"
+    ],
+    "edit-distance": [
+      "baseline",
+      "row-boundary",
+      "inverted-substitution",
+      "diagonal-index"
+    ],
+    "meeting-rooms": [
+      "baseline",
+      "tie-order",
+      "peak-tracking",
+      "end-event-sign"
+    ],
+    "nearest-percentile": [
+      "baseline",
+      "floor-not-ceiling",
+      "rank-index",
+      "descending-order"
+    ],
+    "fifo-inventory": [
+      "baseline",
+      "zero-lot-retention",
+      "over-consumption",
+      "unit-cost-not-quantity"
+    ],
+    "csv-row": [
+      "baseline",
+      "quoted-comma",
+      "escaped-quote",
+      "lost-final-field"
+    ],
+    "shortest-path": [
+      "baseline",
+      "farthest-first",
+      "lost-path-prefix",
+      "missing-relaxation"
+    ]
+  },
+  "case_sets_per_pattern": 25,
+  "rows": 1200,
+  "distinct_bug_patterns": 48,
+  "cases_total": 151780,
+  "arena_task_ids": [
+    "merge-intervals",
+    "merge-intervals-b1-s05",
+    "merge-intervals-b2-s10",
+    "merge-intervals-b3-s15",
+    "moving-sums-b0-s02",
+    "moving-sums-b1-s07",
+    "moving-sums-b2-s12",
+    "moving-sums-b3-s17",
+    "weighted-mean-b0-s04",
+    "weighted-mean-b1-s09",
+    "weighted-mean-b2-s14",
+    "weighted-mean-b3-s19",
+    "stable-unique-b0-s06",
+    "stable-unique-b1-s11",
+    "stable-unique-b2-s16",
+    "stable-unique-b3-s21",
+    "run-length-b0-s08",
+    "run-length-b1-s13",
+    "run-length-b2-s18",
+    "run-length-b3-s23",
+    "luhn-b0-s10",
+    "luhn-b1-s15",
+    "luhn-b2-s20",
+    "luhn-b3-s00",
+    "edit-distance-b0-s12",
+    "edit-distance-b1-s17",
+    "edit-distance-b2-s22",
+    "edit-distance-b3-s02",
+    "meeting-rooms-b0-s14",
+    "meeting-rooms-b1-s19",
+    "meeting-rooms-b2-s24",
+    "meeting-rooms-b3-s04",
+    "nearest-percentile-b0-s16",
+    "nearest-percentile-b1-s21",
+    "nearest-percentile-b2-s01",
+    "nearest-percentile-b3-s06",
+    "fifo-inventory-b0-s18",
+    "fifo-inventory-b1-s23",
+    "fifo-inventory-b2-s03",
+    "fifo-inventory-b3-s08",
+    "csv-row-b0-s20",
+    "csv-row-b1-s00",
+    "csv-row-b2-s05",
+    "csv-row-b3-s10",
+    "shortest-path-b0-s22",
+    "shortest-path-b1-s02",
+    "shortest-path-b2-s07",
+    "shortest-path-b3-s12",
+    "csv-row-b2-s24",
+    "shortest-path-b3-s24"
+  ],
+  "arena_task_count": 50,
+  "note": "Only the 50 listed representatives train in Arena; the remaining rows are reproducible public episodes."
+}

@@ -6,7 +6,7 @@ import math
 import random
 from pathlib import Path
 
-rng = random.Random(20261008)
+rng = random.Random(globals().get('CURRICULUM_SEED', 20261008))
 tasks = []
 solutions = {}
 
