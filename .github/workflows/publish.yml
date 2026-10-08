@@ -1,16 +1,6 @@
 name: Build and verify public image
+# V1 is immutable. Rebuilding it is now an explicit manual operation only.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'server.py'
-      - 'tasks.json'
-      - 'requirements.txt'
-      - 'Dockerfile'
-      - 'openenv.yaml'
-      - 'replay.py'
-      - 'test_environment.py'
-      - 'generate_tasks.py'
   workflow_dispatch:
 permissions:
   contents: write
