@@ -1,0 +1,33 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "additionalProperties": true,
+      "description": "Additional metadata for the action",
+      "title": "Metadata",
+      "type": "object"
+    },
+    "operation": {
+      "description": "write replaces solve source; test gives case feedback; submit ends with a correctness reward.",
+      "enum": [
+        "write",
+        "test",
+        "submit"
+      ],
+      "title": "Operation",
+      "type": "string"
+    },
+    "code": {
+      "default": "",
+      "description": "Full Python source defining solve. Used only for write. No imports, I/O, or private attributes; ordinary builtins and container/string methods are available.",
+      "maxLength": 16000,
+      "title": "Code",
+      "type": "string"
+    }
+  },
+  "required": [
+    "operation"
+  ],
+  "title": "RepairAction",
+  "type": "object"
+}

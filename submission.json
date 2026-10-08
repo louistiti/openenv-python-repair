@@ -1,0 +1,295 @@
+{
+  "submission_id": "python-repair-lab-v1",
+  "dataset": "Louistiti/openenv-python-repair",
+  "image": "ghcr.io/louistiti/openenv-python-repair:v1",
+  "server_port": 8000,
+  "schema": {
+    "action": {
+      "additionalProperties": false,
+      "properties": {
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the action",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "operation": {
+          "description": "write replaces solve source; test gives case feedback; submit ends with a correctness reward.",
+          "enum": [
+            "write",
+            "test",
+            "submit"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "code": {
+          "default": "",
+          "description": "Full Python source defining solve. Used only for write. No imports, I/O, or private attributes; ordinary builtins and container/string methods are available.",
+          "maxLength": 16000,
+          "title": "Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "title": "RepairAction",
+      "type": "object"
+    },
+    "observation": {
+      "additionalProperties": false,
+      "properties": {
+        "done": {
+          "default": false,
+          "description": "Whether the episode has terminated",
+          "title": "Done",
+          "type": "boolean"
+        },
+        "reward": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Reward signal from the last action",
+          "title": "Reward"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the observation",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "task_id": {
+          "default": "",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        },
+        "source": {
+          "default": "",
+          "title": "Source",
+          "type": "string"
+        },
+        "steps_left": {
+          "default": 12,
+          "title": "Steps Left",
+          "type": "integer"
+        }
+      },
+      "title": "RepairObservation",
+      "type": "object"
+    },
+    "state": {
+      "additionalProperties": true,
+      "description": "Base class for environment state.\n\nRepresents internal environment state, separate from observations.",
+      "properties": {
+        "episode_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Unique identifier for the current episode",
+          "title": "Episode Id"
+        },
+        "step_count": {
+          "default": 0,
+          "description": "Number of steps taken in the current episode",
+          "minimum": 0,
+          "title": "Step Count",
+          "type": "integer"
+        }
+      },
+      "title": "State",
+      "type": "object"
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "merge-intervals",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "moving-sums",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "weighted-mean",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "stable-unique",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "run-length",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "luhn",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "edit-distance",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "meeting-rooms",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "nearest-percentile",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "fifo-inventory",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "csv-row",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "shortest-path",
+      "seed": 42,
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 300,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 10,
+      "tool_calls_total": 12,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 4096,
+      "context_tokens": 16384
+    }
+  ],
+  "example_actions": [
+    {
+      "operation": "submit"
+    }
+  ],
+  "finish_action": {
+    "operation": "submit"
+  },
+  "name": "Python Repair Lab",
+  "source": "https://github.com/louistiti/openenv-python-repair"
+}
