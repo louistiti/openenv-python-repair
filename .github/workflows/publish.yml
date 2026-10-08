@@ -1,0 +1,57 @@
+name: Build and verify public image
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  packages: write
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned dependencies
+        run: pip install -r requirements.txt
+      - name: Verify generator and tests
+        run: |
+          python generate_tasks.py
+          git diff --exit-code -- tasks.json tasks.jsonl solutions.json
+          python -m pytest -q test_environment.py
+      - name: Build linux amd64 image
+        run: docker build --platform linux/amd64 -t ghcr.io/louistiti/openenv-python-repair:v1 .
+      - name: Verify container episodes and SDK endpoints
+        run: |
+          docker run -d --name repair -p 8000:8000 ghcr.io/louistiti/openenv-python-repair:v1
+          for i in $(seq 1 120); do curl -fsS http://127.0.0.1:8000/health && break || sleep 1; done
+          python replay.py > replay-image.json
+          openenv validate --url http://127.0.0.1:8000 --level runtime --json > validation-image.json
+          docker inspect ghcr.io/louistiti/openenv-python-repair:v1 > image-inspect.json
+          docker rm -f repair
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish image
+        run: |
+          docker push ghcr.io/louistiti/openenv-python-repair:v1
+          docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/louistiti/openenv-python-repair:v1 > image-digest.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verification-results
+          path: |
+            replay-image.json
+            validation-image.json
+            image-inspect.json
+            image-digest.txt
+      - name: Publish verification release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create v1 --title 'Python Repair Lab v1' --notes '12 original tasks, 1055 cases, 22 tests, 12 complete image replays, six official OpenEnv runtime checks. No Arena score claimed.' replay-image.json validation-image.json image-digest.txt image-inspect.json
