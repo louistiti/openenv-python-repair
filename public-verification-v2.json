@@ -1,0 +1,17 @@
+{
+  "image": "ghcr.io/louistiti/openenv-python-repair@sha256:4395037ff88ef23bc32ba8b5d2d6c4e35091068cb714faccabf9e566f20b2b45",
+  "platform": "linux/amd64",
+  "compressed_layer_bytes": 214997930,
+  "layers": 10,
+  "episodes": 1200,
+  "cases": 151780,
+  "unit_tests": 1214,
+  "runtime_checks": 6,
+  "anonymous_image_replay_verified": true,
+  "dataset_commit": "7c7a19e027df4497aa35c13b350164a52723eeee",
+  "dataset_rows": 1200,
+  "viewer_sample_rows_verified": 17,
+  "viewer_sample_case_lists_verified": 17,
+  "canonical_and_viewer_public_bytes_equal": true,
+  "release": "https://github.com/louistiti/openenv-python-repair/releases/tag/v2"
+}
