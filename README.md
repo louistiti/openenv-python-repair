@@ -10,6 +10,11 @@ size_categories:
 - n<1K
 task_categories:
 - text-generation
+configs:
+- config_name: default
+  data_files:
+  - split: train
+    path: viewer_train.jsonl
 ---
 # Python Repair Lab
 
@@ -51,5 +56,7 @@ docker run --rm -p 8000:8000 ghcr.io/louistiti/openenv-python-repair:v1
 requirements.txt locks dependencies from a Python 3.11 environment. Local checks: 22 tests passed, 12/12 task oracle/floor/reset replays passed, official OpenEnv runtime validation 6/6 passed. Linux image replay reports and digest are published by GitHub Actions. No Arena admission, training or private evaluation result is claimed until a real submission completes.
 
 ## Dataset and provenance
+
+The dataset viewer explicitly loads `viewer_train.jsonl` as the `train` split, rather than inferring splits from the repository's test code or validation reports. It contains the same 12 tasks and 1,055 cases as canonical `tasks.jsonl`. Each row has task_id, prompt, starter, split, num_cases and cases_json. `cases_json` is a lossless JSON string because different tasks use different nested argument and answer types; decode it with `json.loads`. Run `python prepare_viewer.py` to regenerate the viewer file. The canonical executable task files remain unchanged.
 
 All task instructions, starters, generators and reference implementations were created for this repository. No imported benchmark or private evaluation data is included. tasks.jsonl has one training task per line with task_id, prompt, starter, executable argument/expected-value cases and split. See generate_tasks.py for seed 20261008 and task construction, server.py for rewards, solutions.json for the oracle and replay.py for runtime verification. All repository code/data are MIT-licensed; OpenEnv is a separate BSD-3-Clause dependency. This is synthetic programming data with no personal information.
