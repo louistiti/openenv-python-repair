@@ -1,0 +1,110 @@
+name: Build and verify multi-file v3
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-v3.yml', 'v3/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+  packages: write
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: v3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements-calibration.txt pytest
+      - name: Essential regression and fresh-seed correctness
+        run: |
+          set -euo pipefail
+          python -m pytest -q test_environment.py test_calibrate.py test_targeted.py test_calibrate_raw.py | tee test-image-v3.txt
+          python replay.py --seeds 2 --start 2000 --output replay-image-v3.json
+      - name: Build linux amd64 image
+        run: docker build --platform linux/amd64 -t ghcr.io/louistiti/openenv-python-repair:v3 .
+      - name: Container live task replay and SDK validation
+        run: |
+          set -euo pipefail
+          docker run -d --name repair-v3 -p 8766:8000 ghcr.io/louistiti/openenv-python-repair:v3
+          trap 'docker logs repair-v3; docker rm -f repair-v3' EXIT
+          for i in $(seq 1 90); do curl -fsS http://127.0.0.1:8766/health && break || sleep 1; done
+          curl -fsS http://127.0.0.1:8766/health
+          python live_replay.py
+          cp live-replay-results.json live-replay-image-v3.json
+          openenv validate --url http://127.0.0.1:8766 --level runtime --json > validation-image-v3.json
+          curl -fsS http://127.0.0.1:8766/schema > schema-image-v3.json
+          python - <<'PY'
+          import json
+          assert json.load(open('schema-image-v3.json')) == json.load(open('submission-v3.json'))['schema']
+          PY
+          docker inspect ghcr.io/louistiti/openenv-python-repair:v3 > image-inspect-v3.json
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish verified image
+        run: |
+          docker push ghcr.io/louistiti/openenv-python-repair:v3
+          docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/louistiti/openenv-python-repair:v3 > image-digest-v3.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v3-verification
+          path: |
+            v3/test-image-v3.txt
+            v3/replay-image-v3.json
+            v3/live-replay-image-v3.json
+            v3/validation-image-v3.json
+            v3/schema-image-v3.json
+            v3/image-inspect-v3.json
+            v3/image-digest-v3.txt
+      - name: Publish verification reports
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create v3 --title 'Python Repair Lab v3' --notes '24 seeded multi-file tasks across eight repair families. Linux container tests, task replay and pinned OpenEnv runtime checks passed. Quantized local Qwen calibration is imperfect; no learning improvement or Arena score claimed. No second submission yet.' test-image-v3.txt replay-image-v3.json live-replay-image-v3.json validation-image-v3.json schema-image-v3.json image-inspect-v3.json image-digest-v3.txt
+  anonymous-replay:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: v3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: v3-verification
+          path: v3
+      - name: Anonymous immutable image pull and all-task live replay
+        run: |
+          set -euo pipefail
+          export DOCKER_CONFIG="$(mktemp -d)"
+          image="$(cat image-digest-v3.txt)"
+          docker pull "$image"
+          docker inspect "$image" > image-public-inspect-v3.json
+          docker run -d --name public-v3 -p 8766:8000 "$image"
+          trap 'docker logs public-v3; docker rm -f public-v3; rm -rf "$DOCKER_CONFIG"' EXIT
+          for i in $(seq 1 90); do curl -fsS http://127.0.0.1:8766/health && break || sleep 1; done
+          curl -fsS http://127.0.0.1:8766/health
+          python live_replay.py
+          cp live-replay-results.json live-replay-public-v3.json
+          openenv validate --url http://127.0.0.1:8766 --level runtime --json > validation-public-v3.json
+          curl -fsS http://127.0.0.1:8766/schema > schema-public-v3.json
+          python - <<'PY'
+          import json
+          assert json.load(open('schema-public-v3.json')) == json.load(open('submission-v3.json'))['schema']
+          PY
+      - name: Publish anonymous verification reports
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload v3 live-replay-public-v3.json validation-public-v3.json schema-public-v3.json image-public-inspect-v3.json

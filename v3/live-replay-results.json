@@ -1,0 +1,176 @@
+{
+  "transport": "real_network_websocket",
+  "task_ids": 24,
+  "all_passed": true,
+  "rows": [
+    {
+      "task_id": "ledger-1",
+      "seed": 1234,
+      "starter_reward": 0.5057471264367815,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "ledger-2",
+      "seed": 1234,
+      "starter_reward": 0.5057471264367815,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "ledger-3",
+      "seed": 1234,
+      "starter_reward": 0.3333333333333333,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "capacity-1",
+      "seed": 1234,
+      "starter_reward": 0.5747126436781609,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "capacity-2",
+      "seed": 1234,
+      "starter_reward": 0.3390804597701149,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "capacity-3",
+      "seed": 1234,
+      "starter_reward": 0.3333333333333333,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "workflow-1",
+      "seed": 1234,
+      "starter_reward": 0.8333333333333334,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "workflow-2",
+      "seed": 1234,
+      "starter_reward": 0.4827586206896552,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "workflow-3",
+      "seed": 1234,
+      "starter_reward": 0.37931034482758624,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "incident-1",
+      "seed": 1234,
+      "starter_reward": 0.6666666666666666,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "incident-2",
+      "seed": 1234,
+      "starter_reward": 0.5057471264367815,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "incident-3",
+      "seed": 1234,
+      "starter_reward": 0.3333333333333333,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "sensor-1",
+      "seed": 1234,
+      "starter_reward": 0.6781609195402298,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "sensor-2",
+      "seed": 1234,
+      "starter_reward": 0.3333333333333333,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "sensor-3",
+      "seed": 1234,
+      "starter_reward": 0.3333333333333333,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "reconcile-1",
+      "seed": 1234,
+      "starter_reward": 0.6666666666666666,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "reconcile-2",
+      "seed": 1234,
+      "starter_reward": 0.5,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "reconcile-3",
+      "seed": 1234,
+      "starter_reward": 0.3333333333333333,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "allocation-1",
+      "seed": 1234,
+      "starter_reward": 0.6436781609195402,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "allocation-2",
+      "seed": 1234,
+      "starter_reward": 0.6436781609195402,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "allocation-3",
+      "seed": 1234,
+      "starter_reward": 0.16666666666666666,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "expression-1",
+      "seed": 1234,
+      "starter_reward": 0.8333333333333334,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "expression-2",
+      "seed": 1234,
+      "starter_reward": 0.3735632183908046,
+      "oracle_reward": 1.0,
+      "done": true
+    },
+    {
+      "task_id": "expression-3",
+      "seed": 1234,
+      "starter_reward": 0.18965517241379312,
+      "oracle_reward": 1.0,
+      "done": true
+    }
+  ],
+  "model_rollouts": 0
+}

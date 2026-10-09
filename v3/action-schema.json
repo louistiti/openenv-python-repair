@@ -1,0 +1,41 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "additionalProperties": true,
+      "description": "Additional metadata for the action",
+      "title": "Metadata",
+      "type": "object"
+    },
+    "operation": {
+      "description": "read returns a workspace file; write replaces one module; test runs visible examples; submit grades hidden cases and ends.",
+      "enum": [
+        "read",
+        "write",
+        "test",
+        "submit"
+      ],
+      "title": "Operation",
+      "type": "string"
+    },
+    "path": {
+      "default": "",
+      "description": "Observed flat Python filename for read/write. No paths, new files or changes to settings.py.",
+      "maxLength": 80,
+      "title": "Path",
+      "type": "string"
+    },
+    "code": {
+      "default": "",
+      "description": "Full replacement module for write. Allowed: local imports, csv.DictReader/reader, io.StringIO, fractions.Fraction and ordinary builtins/methods. No private attributes, filesystem, network, process or dynamic execution.",
+      "maxLength": 16000,
+      "title": "Code",
+      "type": "string"
+    }
+  },
+  "required": [
+    "operation"
+  ],
+  "title": "RepairAction",
+  "type": "object"
+}

@@ -1,0 +1,293 @@
+{
+  "submission_id": "python-repair-lab-v3",
+  "dataset": "Louistiti/openenv-python-repair",
+  "image": "ghcr.io/louistiti/openenv-python-repair:v3",
+  "server_port": 8000,
+  "schema": {
+    "action": {
+      "additionalProperties": false,
+      "properties": {
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the action",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "operation": {
+          "description": "read returns a workspace file; write replaces one module; test runs visible examples; submit grades hidden cases and ends.",
+          "enum": [
+            "read",
+            "write",
+            "test",
+            "submit"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "path": {
+          "default": "",
+          "description": "Observed flat Python filename for read/write. No paths, new files or changes to settings.py.",
+          "maxLength": 80,
+          "title": "Path",
+          "type": "string"
+        },
+        "code": {
+          "default": "",
+          "description": "Full replacement module for write. Allowed: local imports, csv.DictReader/reader, io.StringIO, fractions.Fraction and ordinary builtins/methods. No private attributes, filesystem, network, process or dynamic execution.",
+          "maxLength": 16000,
+          "title": "Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "title": "RepairAction",
+      "type": "object"
+    },
+    "observation": {
+      "additionalProperties": false,
+      "properties": {
+        "done": {
+          "default": false,
+          "description": "Whether the episode has terminated",
+          "title": "Done",
+          "type": "boolean"
+        },
+        "reward": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Reward signal from the last action",
+          "title": "Reward"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the observation",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "task_id": {
+          "default": "",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        },
+        "files": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Files",
+          "type": "object"
+        },
+        "steps_left": {
+          "default": 30,
+          "title": "Steps Left",
+          "type": "integer"
+        }
+      },
+      "title": "RepairObservation",
+      "type": "object"
+    },
+    "state": {
+      "additionalProperties": true,
+      "description": "Base class for environment state.\n\nRepresents internal environment state, separate from observations.",
+      "properties": {
+        "episode_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Unique identifier for the current episode",
+          "title": "Episode Id"
+        },
+        "step_count": {
+          "default": 0,
+          "description": "Number of steps taken in the current episode",
+          "minimum": 0,
+          "title": "Step Count",
+          "type": "integer"
+        }
+      },
+      "title": "State",
+      "type": "object"
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "workflow-1",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "workflow-2",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "workflow-3",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "incident-1",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "incident-2",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "incident-3",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "allocation-1",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "allocation-2",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "allocation-3",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "expression-1",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "expression-2",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    },
+    {
+      "task_id": "expression-3",
+      "split": "train",
+      "reset_wall_s": 120,
+      "rollout_wall_s": 600,
+      "verifier_wall_s": 120,
+      "tool_wall_s": 20,
+      "tool_calls_total": 30,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384
+    }
+  ],
+  "example_actions": [
+    {
+      "operation": "submit"
+    }
+  ],
+  "finish_action": {
+    "operation": "submit"
+  },
+  "name": "Python Repair Lab v3",
+  "source": "https://github.com/louistiti/openenv-python-repair/tree/main/v3"
+}
